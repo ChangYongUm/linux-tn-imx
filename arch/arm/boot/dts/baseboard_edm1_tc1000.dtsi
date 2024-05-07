@@ -1,0 +1,110 @@
+/*
+ * Copyright 2018 TechNexion Ltd.
+ *
+ * Author: Alvin chen <alvin.chen@technexion.com>
+ *         Ray Chang <ray.chang@technexion.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "tnmacro.h"
+
+/ {
+#ifdef EDM_EXT_LVDS_PWR
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		lvds_power: regulator@200 {
+			compatible = "regulator-fixed";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-name = "LVDS_PWR";
+			gpio = <&EDM_EXT_LVDS_PWR 1>;
+			enable-active-high;
+			regulator-always-on;
+		};
+	};
+#endif
+
+	sound {
+		compatible = "fsl,imx-sgtl5000",
+			     "fsl,imx-audio-sgtl5000";
+		model = "audio-sgtl5000";
+		ssi-controller = <&EDM_AUDA_I2S_CHANNEL>;
+		audio-codec = <&codec>;
+		audio-routing =
+			"MIC_IN", "Mic Jack",
+			"Mic Jack", "Mic Bias",
+			"Line Out Jack", "HP_OUT";
+		mux-int-port = <EDM_AUDA_MUX_INT>;
+		mux-ext-port = <EDM_AUDA_MUX_EXT>;
+	};
+};
+
+EDM_TC1000_GPIO_DEFS();
+
+&EDM_I2CA {
+	status = "okay";
+};
+
+&EDM_I2CB {
+	status = "okay";
+	pca9555: pca9555@27 {
+		compatible = "nxp,pca9555";
+		reg = <0x27>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		#ifdef EDM_EXT_GPIO_P264
+		interrupt-controller;
+		interrupt-parent = <&gpio7>;
+		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
+		#interrupt-cells = <2>;
+		#endif
+		gpio-line-names = "GPIO_EXP0", "GPIO_EXP1", "GPIO_EXP2", "GPIO_EXP3", "GPIO_EXP4", "GPIO_EXP5", "GPIO_EXP6", "GPIO_EXP7", 
+							"GPIO_EXP8", "GPIO_EXP9", "GPIO_EXP10", "GPIO_EXP11", "", "", "", "";
+	};
+
+	codec: sgtl5000@a {
+		compatible = "fsl,sgtl5000";
+		reg = <0x0a>;
+		clocks = <&EDM_AUDA_CLK_SRC>;
+		VDDA-supply = <&reg_2p5v>;
+		VDDIO-supply = <&reg_3p3v>;
+	};
+};
+
+&EDM_I2CC {
+	status = "okay";
+	ds1337: rtc@68 {
+		compatible = "mxim,ds1337";
+		reg = <0x68>;
+	};
+};
+
+&EDM_CANA {
+	status = "okay";
+};
+
+&EDM_CANB {
+	status = "okay";
+};
+
+&spdif {
+	status = "okay";
+};
+
+&ecspi1 {
+	status = "okay";
+};
+
+#ifdef EDM_PCIEA
+&EDM_PCIEA {
+	#ifdef EDM_PCIEA_RESET_GPIO
+	reset-gpio = <&EDM_PCIEA_RESET_GPIO GPIO_ACTIVE_HIGH>;
+	#endif
+	status = "okay";
+};
+#endif

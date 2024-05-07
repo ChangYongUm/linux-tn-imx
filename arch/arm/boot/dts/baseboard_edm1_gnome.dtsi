@@ -1,0 +1,130 @@
+/*
+ * Copyright 2018 TechNexion Ltd.
+ *
+ * Author: Tapani Utriainen <tapani@technexion.com>
+ *	   Richard Hu <richard.hu@technexion.com>
+ *	   Ray Chang <ray.chang@technexion.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+#include "tnmacro.h"
+
+#define EXGPIO_0 pca9554 0
+#define EXGPIO_1 pca9554 1
+#define EXGPIO_2 pca9554 2
+#define EXGPIO_3 pca9554 3
+#define EXGPIO_4 pca9554 4
+#define EXGPIO_5 pca9554 5
+#define EXGPIO_6 pca9554 6
+#define EXGPIO_7 pca9554 7
+
+/ {
+	sound {
+		compatible = "fsl,imx-sgtl5000",
+			     "fsl,imx-audio-sgtl5000";
+		model = "audio-sgtl5000";
+		ssi-controller = <&EDM_AUDA_I2S_CHANNEL>;
+		audio-codec = <&codec>;
+		audio-routing =
+			"MIC_IN", "Mic Jack",
+			"Mic Jack", "Mic Bias",
+			"Headphone Jack", "HP_OUT";
+#if defined(EDM_AUDA_MUX_INT) && defined(EDM_AUDA_MUX_EXT)
+		mux-int-port = <EDM_AUDA_MUX_INT>;
+		mux-ext-port = <EDM_AUDA_MUX_EXT>;
+#else
+		fsl,no-audmux = "true";
+#endif
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		gnome-led {
+			label = "gnome-led";
+			gpios = <&EDM_EXT_GPIO_P258 GPIO_ACTIVE_HIGH>;
+			default-state = "off";
+		};
+	};
+
+	sound-spdif {
+		status = "disabled";
+	};
+
+	backlight_lvds {
+		status = "disabled";
+	};
+};
+
+EDM_GNOME_GPIO_DEFS();
+
+&EDM_I2CA {
+	status = "okay";
+};
+
+&EDM_I2CB {
+	status = "okay";
+
+	codec: sgtl5000@a {
+		compatible = "fsl,sgtl5000";
+		reg = <0x0a>;
+		clocks = <&EDM_AUDA_CLK_SRC>;
+		VDDA-supply = <&reg_2p5v>;
+		VDDIO-supply = <&reg_3p3v>;
+	};
+
+	polytouch: edt-ft5x06@38 {
+		compatible = "edt,edt-ft5x06";
+		reg = <0x38>;
+		interrupt-parent = <&GPIO_BANK(EDM_EXT_GPIO_P261)>; /* GPIO_P261 J1B-261 */
+		reset-gpios = <&EDM_EXT_GPIO_P259 GPIO_ACTIVE_LOW>; /* GPIO_P259 J1B-259 */
+		interrupts = <GPIO_NO(EDM_EXT_GPIO_P261) 0>;
+		touchscreen-size-x = <800>;
+		touchscreen-size-y = <480>;
+	};
+
+	pca9554: pca9554@25 {
+		compatible = "nxp,pca9554";
+		reg = <0x25>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		#interrupt-cells = <2>;
+		gpio-line-names = "EXGPIO_0", "EXGPIO_1", "EXGPIO_2", "EXGPIO_3",
+							"EXGPIO_4", "EXGPIO_5", "EXGPIO_6", "";
+	};
+};
+
+&EDM_I2CC {
+	status = "okay";
+
+	ds1337: rtc@68 {
+		compatible = "mxim,ds1337";
+		reg = <0x68>;
+	};
+};
+
+&EDM_SPIA {
+	status = "okay";
+
+	spidev@0 {
+		compatible = "rohm,dh2228fv";
+		spi-max-frequency = <10000000>;
+		reg = <0>;
+	};
+};
+
+&EDM_SPIB {
+	status = "okay";
+};
+
+&EDM_CANA {
+	status = "okay";
+};
+
+&EDM_CANB {
+	status = "okay";
+};
+

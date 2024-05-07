@@ -1,0 +1,231 @@
+/*
+ * Copyright 2020 Technexion Ltd.
+ *
+ * Author: Richard Hu <richard.hu@technexion.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+/ {
+	/delete-node/ backlight_lcd;
+	/delete-node/ backlight_lvds;
+
+	gpio-leds {
+		compatible = "gpio-leds";
+
+		led {
+			label = "gpio-led";
+			linux,default-trigger = "heartbeat";
+			gpios = <&pca9555_21 8 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	sound_wm8960: sound-wm8960 {
+		compatible = "fsl,imx-audio-wm8960";
+		model = "wm8960-audio";
+		cpu-dai = <&ssi1>;
+		codec-master;
+		audio-codec = <&codec>;
+		mux-int-port = <1>;
+		mux-ext-port = <3>;
+		audio-routing =
+			"Headphone Jack", "HP_L",
+			"Headphone Jack", "HP_R",
+			"Ext Spk", "SPK_LP",
+			"Ext Spk", "SPK_LN",
+			"Ext Spk", "SPK_RP",
+			"Ext Spk", "SPK_RN",
+			"LINPUT1", "Main MIC",
+			"RINPUT1", "Main MIC",
+			"Main MIC", "MICB";
+		/* JD2: hp detect high for headphone*/
+		hp-det = <2 0>;
+	};
+
+	clocks {
+		codec_osc: aud_mclk {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <24000000>;
+			clock-output-names = "wm8960-mclk";
+		};
+	};
+
+	backlight_lvds {
+		compatible = "pwm-backlight";
+		pwms = <&pwm4 0 50000>;
+		brightness-levels = <0 36 72 108 144 180 216 255>;
+		power-supply = <&reg_lvds_bl_en>;
+		default-brightness-level = <6>;
+	};
+
+	regulators {
+		reg_lvds_bl_en: lvds_bl_en {
+				compatible = "regulator-fixed";
+				pinctrl-names = "default";
+				regulator-name = "fixed-supply";
+				regulator-min-microvolt = <5000000>;
+				regulator-max-microvolt = <5000000>;
+				gpio = <&pca9555_23 1 0>;
+				enable-active-high;
+				regulator-always-on;
+				regulator-boot-on;
+		};
+
+		reg_lvds_vdd: lvds_vdd {
+				compatible = "regulator-fixed";
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_lvds_vdd>;
+				regulator-name = "fixed-supply";
+				regulator-min-microvolt = <5000000>;
+				regulator-max-microvolt = <5000000>;
+				gpio = <&gpio2 11 0>;
+				enable-active-high;
+				regulator-always-on;
+				regulator-boot-on;
+		};
+	};
+};
+
+&iomuxc {
+	pinctrl_rtc_ds1337_irq: rtc_ds1337_irqgrp {
+		fsl,pins = <
+			MX6QDL_PAD_CSI0_MCLK__GPIO5_IO19	0x80000000 /* GPIO_P24, irq */
+		>;
+	};
+	pinctrl_pca9555_21: pca9555_21grp {
+		fsl,pins = <
+			MX6QDL_PAD_CSI0_PIXCLK__GPIO5_IO18	0x80000000 /* GPIO_P25, irq */
+		>;
+	};
+
+	pinctrl_pca9555_23: pca9555_23grp {
+		fsl,pins = <
+			MX6QDL_PAD_CSI0_DAT12__GPIO5_IO30	0x80000000 /* GPIO_P42, irq */
+		>;
+	};
+
+	pinctrl_pca9555_26: pca9555_26grp {
+		fsl,pins = <
+			MX6QDL_PAD_CSI0_DAT14__GPIO6_IO00	0x80000000 /* GPIO_P34, irq */
+		>;
+	};
+
+	pinctrl_lvds_vdd: lvds_vddgrp {
+		fsl,pins = <
+			MX6QDL_PAD_SD4_DAT3__GPIO2_IO11		0x80000000 /* DISP0_VDD_EN */
+		>;
+	};
+};
+
+&i2c1 {
+	rtc: ds1337@68 {
+		compatible = "dallas,ds1337";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rtc_ds1337_irq>;
+		reg = <0x68>;
+		wakeup-source;
+		interrupt-parent = <&gpio5>;
+		interrupts = <19 0>;
+	};
+};
+
+&i2c3 {
+	codec: wm8960@1a {
+		compatible = "wlf,wm8960";
+		reg = <0x1a>;
+		#sound-dai-cells = <0>;
+		clocks = <&codec_osc>;  /* Note:  AXON-PI the clock is external osc */
+		clock-names = "mclk";
+		wlf,shared-lrclk;
+		wlf,fixed-mclk;
+	};
+
+	pca9555_21: pca9555_21@21 {
+		compatible = "nxp,pca9555";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pca9555_21>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+		reg =<0x21>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+
+	pca9555_23: pca9555_23@23 {
+		compatible = "nxp,pca9555";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pca9555_23>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <30 IRQ_TYPE_EDGE_FALLING>;
+		reg =<0x23>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+
+	pca9555_26: pca9555_26@26 {
+		compatible = "nxp,pca9555";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_pca9555_26>;
+		interrupt-parent = <&gpio6>;
+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
+		reg =<0x26>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+};
+
+&ldb {
+	status = "okay";
+	lvds-channel@0 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <24>;
+		crtc = "ipu2-di0";
+		primary;
+		status = "okay";
+
+		/delete-node/ display-timings;
+		
+		display-timings {
+			native-mode = <&timing0>;
+			timing0: VL101-12880YL {
+				clock-frequency = <68900000>;
+				hactive = <1280>;
+				vactive = <800>;
+				hfront-porch = <40>;
+				hsync-len = <80>;
+				hback-porch = <40>;
+				vfront-porch = <3>;
+				vsync-len = <10>;
+				vback-porch = <10>;
+				vsync-active = <1>;
+				hsync-active = <1>;
+			};
+		};
+	};
+};
+
+&pcie {
+	clkreq-gpio = <&pca9555_23 7 GPIO_ACTIVE_LOW>;
+	disable-gpio = <&pca9555_23 4 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&pca9555_23 6 GPIO_ACTIVE_LOW>;
+	ext_osc = <1>;
+	status = "okay";
+};
+
+&PICO_CANA {
+	status = "okay";
+};
+
+&PICO_CANB {
+	status = "okay";
+};
