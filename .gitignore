@@ -100,10 +100,10 @@ modules.order
 #
 # Generated include files
 #
-/include/config/
-/include/generated/
-/include/ksym/
-/arch/*/include/generated/
+#/include/config/
+#/include/generated/
+#/include/ksym/
+#/arch/*/include/generated/
 
 # stgit generated dirs
 patches-*
