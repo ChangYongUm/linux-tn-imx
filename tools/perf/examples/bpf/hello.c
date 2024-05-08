@@ -2,7 +2,7 @@
 
 int syscall_enter(openat)(void *args)
 {
-	puts("Hello, world\n");
+	puts("Hello, world UCY\n");
 	return 0;
 }
 
