@@ -1,8 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
  * perf_dlfilter.h: API for perf --dlfilter shared object
- * Copyright (c) 2021, Intel Corporation.
- 
+ * Copyright (c) 2021, Intel Corporation. 
  */
  
 #ifndef _LINUX_PERF_DLFILTER_H
