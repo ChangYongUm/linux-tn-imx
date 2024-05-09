@@ -59,7 +59,7 @@
 		pwms = <&pwm2 0 50000>;
 		brightness-levels = <0 36 72 108 144 180 216 255>;
 		default-brightness-level = <6>;
-		status = "disabled";
+		status = "okay";
 	};
 
 	usb_hub_rst: usb_hub_rst {
@@ -109,6 +109,10 @@
 			clock-output-names = "wm8960-mclk";
 		};
 	};
+};
+
+&regulator_lvdspwr {
+	status = "okay"
 };
 
 &gpio1 {
