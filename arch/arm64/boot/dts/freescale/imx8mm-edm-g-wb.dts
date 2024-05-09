@@ -14,7 +14,6 @@
 	model = "TechNexion EDM-G-IMX8MM and WB baseboard";
 	compatible = "fsl,imx8mm-edm-g", "fsl,imx8mm";
 
-
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
