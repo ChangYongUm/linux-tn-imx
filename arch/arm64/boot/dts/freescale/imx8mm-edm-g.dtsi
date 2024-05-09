@@ -73,6 +73,18 @@
 			off-on-delay = <20000>;
 			enable-active-high;
 		};
+		
+		reg_regulator_lvdspwr : regulator_lvdspwr {
+                        regulator-max-microvolt = <0x325aa0>;
+                        pinctrl-names = "default";
+                        gpio = <0x6e 0x07 0x00>;
+                        pinctrl-0 = <0x73>;
+                        enable-active-high;
+                        regulator-min-microvolt = <0x325aa0>;
+                        regulator-name = "lvds0_vdden";
+                        compatible = "regulator-fixed";
+                        status = "okay";
+                };
 	};
 };
 
@@ -477,10 +489,6 @@
 };
 
 &lvds_backlight {
-        status = "okay";
-};
-
-&regulator_lvdspwr {
         status = "okay";
 };
 
