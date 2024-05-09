@@ -387,7 +387,7 @@
 			};
 		};
 	};
-/*
+
 	dsi_lvds_bridge: sn65dsi84@2d {
 		reg = <0x2d>;
 		compatible = "ti,sn65dsi84";
@@ -431,10 +431,8 @@
 					0x00 0x00 0x00 0x00
 
 					0x00 0x00 0x00 0x01>;
-		status = "okay";
-		
+		status = "okay";		
 	};
-	*/
 
 	eeprom_som: eeprom@53 {
 		compatible = "atmel,24c02";
