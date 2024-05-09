@@ -51,6 +51,7 @@
 			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
 			regulator-always-on;
+			status = "okay"
 		};
 	};
 
@@ -109,10 +110,6 @@
 			clock-output-names = "wm8960-mclk";
 		};
 	};
-};
-
-&regulator_lvdspwr {
-	status = "okay"
 };
 
 &gpio1 {
