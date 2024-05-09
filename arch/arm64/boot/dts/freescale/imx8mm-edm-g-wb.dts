@@ -51,7 +51,7 @@
 			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
 			regulator-always-on;
-			status = "okay"
+			status = "okay";
 		};
 	};
 
