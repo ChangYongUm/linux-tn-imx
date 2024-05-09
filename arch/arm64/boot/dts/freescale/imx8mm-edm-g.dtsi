@@ -74,17 +74,40 @@
 			enable-active-high;
 		};
 		
-		reg_regulator_lvdspwr : regulator_lvdspwr {
-                        regulator-max-microvolt = <0x325aa0>;
-                        pinctrl-names = "default";
-                        gpio = <0x6e 0x07 0x00>;
-                        pinctrl-0 = <0x73>;
-                        enable-active-high;
-                        regulator-min-microvolt = <0x325aa0>;
-                        regulator-name = "lvds0_vdden";
-                        compatible = "regulator-fixed";
-                        status = "okay";
-                };
+		reg_usb_otg_vbus: usb_otg_vbus {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_otg_vbus>;
+			compatible = "regulator-fixed";
+			regulator-name = "usb_otg_vbus";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			gpio = <&gpio1 10 GPIO_ACTIVE_LOW>;
+			enable-active-low;
+		};
+
+		reg_lvds_pwr: regulator_lvdspwr {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_lvds0_pwr>;
+			compatible = "regulator-fixed";
+			regulator-name = "lvds0_vdden";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+			status = "okay";
+		};
+
+		reg_lvds_backlight_pwr: regulator_lvdsblpwr {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_lvds0_backlight_pwr>;
+			compatible = "regulator-fixed";
+			regulator-name = "lvds0_bl_en";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+			regulator-always-on;
+		};
 	};
 };
 
