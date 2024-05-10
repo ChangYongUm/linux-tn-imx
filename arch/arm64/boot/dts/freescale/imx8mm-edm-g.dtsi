@@ -74,12 +74,6 @@
 			enable-active-high;
 		};
 	};
-
-
-	dsi_host: dsi-host {
-		compatible = "samsung,sec-mipi-dsi";
-		status = "okay";
-	};
 };
 
 
