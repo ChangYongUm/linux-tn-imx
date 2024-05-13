@@ -442,48 +442,6 @@
 	};
 };
 
-
-&mipi_dsi {
-	status = "okay";
-	
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	panel@0 {
-		reg = <0>;
-		compatible = "tn,dsi2lvds-panel";
-		backlight = <&lvds_backlight>;
-		power-supply = <&reg_lvds_pwr>;
-
-		dsi,flags = <0x0007>;
-		dsi,format = <0>;
-		dsi,lanes = <4>;
-		panel-width-mm  = <217>;
-		panel-height-mm = <135>;
-		bus-format = <0x100a>;	/* MEDIA_BUS_FMT_RGB888_1X24 */
-		bus-flags = <1>;
-		refresh-rate = <60>;
-		rotate = <0>;
-		/* horz-flip; */
-		/* vert-flip; */
-
-		panel-timing {
-			clock-frequency = <68900000>;
-			hactive = <1280>;
-			vactive = <800>;
-			hfront-porch = <40>;
-			hsync-len = <80>;
-			hback-porch = <40>;
-			vfront-porch = <3>;
-			vsync-len = <10>;
-			vback-porch = <10>;
-			/* flags = DISPLAY_FLAGS_HSYNC_HIGH | DISPLAY_FLAGS_VSYNC_HIGH */
-			vsync-active = <1>;
-			hsync-active = <1>;
-		};
-	};
-};
-
 &i2c2 { /* I2C_B */
 	clock-frequency = <400000>;
 	pinctrl-names = "default";
@@ -496,16 +454,6 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c3>;
 	status = "okay";
-	
-	exc80w46: touchscreen@2a {
-		compatible = "eeti,exc80h60";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_touch_irq>, <&pinctrl_touch_reset>;
-		reg = <0x2a>;
-		interrupt-parent = <&gpio1>;
-		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-		status = "okay";
-	};
 };
 
 &i2c4 { /* I2C_A */

@@ -195,29 +195,46 @@
 	};
 };
 
+&mipi_dsi {
+	status = "okay";
+	
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-&clk {
-	init-on-array = <IMX8MM_CLK_UART4_ROOT
-	IMX8MM_CLK_AHB IMX8MM_CLK_DRAM_CORE
-	IMX8MM_CLK_NOC IMX8MM_CLK_NOC_APB
-	IMX8MM_CLK_USB_BUS
-	IMX8MM_CLK_MAIN_AXI IMX8MM_CLK_AUDIO_AHB
-	IMX8MM_CLK_DRAM_APB IMX8MM_CLK_A53_DIV
-	IMX8MM_ARM_PLL_OUT IMX8MM_CLK_DISP_AXI
-	IMX8MM_CLK_DISP_APB
-	>;
+	panel@0 {
+		reg = <0>;
+		compatible = "tn,dsi2lvds-panel";
+		backlight = <&lvds_backlight>;
+		power-supply = <&reg_lvds_pwr>;
+
+		dsi,flags = <0x0007>;
+		dsi,format = <0>;
+		dsi,lanes = <4>;
+		panel-width-mm  = <217>;
+		panel-height-mm = <135>;
+		bus-format = <0x100a>;	/* MEDIA_BUS_FMT_RGB888_1X24 */
+		bus-flags = <1>;
+		refresh-rate = <60>;
+		rotate = <0>;
+		/* horz-flip; */
+		/* vert-flip; */
+
+		panel-timing {
+			clock-frequency = <68900000>;
+			hactive = <1280>;
+			vactive = <800>;
+			hfront-porch = <40>;
+			hsync-len = <80>;
+			hback-porch = <40>;
+			vfront-porch = <3>;
+			vsync-len = <10>;
+			vback-porch = <10>;
+			/* flags = DISPLAY_FLAGS_HSYNC_HIGH | DISPLAY_FLAGS_VSYNC_HIGH */
+			vsync-active = <1>;
+			hsync-active = <1>;
+		};
+	};
 };
-
-
-/*
- * ATTENTION: M4 may use IPs like below
- * ECSPI0/ECSPI2, GPIO1/GPIO5, GPT1, I2C3, I2S3, WDOG1, UART4, PWM3, SDMA1
- */
-
-&sdma3 {
-	status = "disabled";
-};
-
 
 &gpio1 {
 	pinctrl-0 = <&pinctrl_gpio1>;
@@ -526,9 +543,14 @@
 	status = "okay";
 };
 
+
+
+// for M4
 /*
-for M4
-*/
+ * ATTENTION: M4 may use IPs like below
+ * ECSPI0/ECSPI2, GPIO1/GPIO5, GPT1, I2C3, I2S3, WDOG1, UART4, PWM3, SDMA1
+ */
+
 &sdma1{
 	status = "disabled";
 };
@@ -552,3 +574,17 @@ for M4
 &flexspi {
 	status = "disabled";
 };
+
+//for m4
+&clk {
+	init-on-array = <IMX8MM_CLK_UART4_ROOT
+	IMX8MM_CLK_AHB IMX8MM_CLK_DRAM_CORE
+	IMX8MM_CLK_NOC IMX8MM_CLK_NOC_APB
+	IMX8MM_CLK_USB_BUS
+	IMX8MM_CLK_MAIN_AXI IMX8MM_CLK_AUDIO_AHB
+	IMX8MM_CLK_DRAM_APB IMX8MM_CLK_A53_DIV
+	IMX8MM_ARM_PLL_OUT IMX8MM_CLK_DISP_AXI
+	IMX8MM_CLK_DISP_APB
+	>;
+};
+
