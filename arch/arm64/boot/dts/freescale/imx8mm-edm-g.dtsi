@@ -275,6 +275,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c1>;
 	status = "okay";
+	
 
 	pmic: pca9450@25 {
 		reg = <0x25>;
@@ -430,11 +431,6 @@
 
 					0x00 0x00 0x00 0x01>;
 
-		port@2 {
-			sn65dsi84_from_dsim: endpoint {
-				remote-endpoint = <&dsim_to_sn65dsi84>;
-			};
-		};
 
 	};
 
