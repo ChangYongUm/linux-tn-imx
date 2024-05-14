@@ -53,6 +53,11 @@
 	};
 };
 
+/* Enable Mailbox Unit */
+&mu {
+    status = "okay";
+};
+
 &clk {
 	init-on-array = <IMX8MM_CLK_UART4_ROOT
 	IMX8MM_CLK_AHB IMX8MM_CLK_DRAM_CORE
