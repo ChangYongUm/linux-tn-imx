@@ -869,11 +869,6 @@ static int rpmsg_probe(struct virtio_device *vdev)
 	size_t total_buf_space;
 	bool notify;
 
-
-//test
-	pr_info(" rpmsg_probe \n ");
-
-
 	vrp = kzalloc(sizeof(*vrp), GFP_KERNEL);
 	if (!vrp)
 		return -ENOMEM;
@@ -884,6 +879,10 @@ static int rpmsg_probe(struct virtio_device *vdev)
 	mutex_init(&vrp->endpoints_lock);
 	mutex_init(&vrp->tx_lock);
 	init_waitqueue_head(&vrp->sendq);
+
+
+//test
+	pr_info(" rpmsg_probe : %s\n ", names);
 
 	/* We expect two virtqueues, rx and tx (and in this order) */
 	err = virtio_find_vqs(vdev, 2, vqs, vq_cbs, names, NULL);
