@@ -869,6 +869,10 @@ static int rpmsg_probe(struct virtio_device *vdev)
 	size_t total_buf_space;
 	bool notify;
 
+
+	dev_info(" rpmsg_probe \n ");
+
+
 	vrp = kzalloc(sizeof(*vrp), GFP_KERNEL);
 	if (!vrp)
 		return -ENOMEM;
