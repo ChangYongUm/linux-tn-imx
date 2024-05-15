@@ -150,7 +150,7 @@
  * ECSPI0/ECSPI2, GPIO1/GPIO5, GPT1, I2C3, I2S3, WDOG1, UART4, PWM3, SDMA1
  */
 
-&rpmsg{
+&rpmsg {
 	/*
 	 * 64K for one rpmsg instance:
 	 * --0xb8000000~0xb800ffff: pingpong
@@ -178,7 +178,7 @@
 	status = "disabled";
 }
 
-/* End Config. For M4 */
+/* End Config For M4 */
 
 &gpio1 {
 	pinctrl-0 = <&pinctrl_gpio1>;
