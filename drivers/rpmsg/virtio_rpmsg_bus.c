@@ -870,7 +870,8 @@ static int rpmsg_probe(struct virtio_device *vdev)
 	bool notify;
 
 
-	dev_info(" rpmsg_probe \n ");
+//test
+	pr_info(" rpmsg_probe \n ");
 
 
 	vrp = kzalloc(sizeof(*vrp), GFP_KERNEL);
