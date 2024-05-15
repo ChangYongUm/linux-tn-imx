@@ -32,7 +32,7 @@
 	};
 
 	rpmsg: rpmsg{
-		compatible = "fsl,imx8mq-rpmsg";
+		compatible = "fsl,imx8mm-rpmsg";
 		/* up to now, the following channels are used in imx rpmsg
 		 * - tx1/rx1: messages channel.
 		 * - general interrupt1: remote proc finish re-init rpmsg stack
