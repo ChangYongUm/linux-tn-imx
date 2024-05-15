@@ -176,7 +176,7 @@
 
 &ecspi2 {
 	status = "disabled";
-}
+};
 
 /* End Config For M4 */
 
