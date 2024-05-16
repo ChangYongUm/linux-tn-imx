@@ -16,16 +16,6 @@
 		stdout-path = &uart2;
 	};
 
-	bt_reg_on: btreg_on {
-		compatible = "gpio-reset";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_bt_ctrl>;
-		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-		reset-delay-us = <2000>;
-		reset-post-delay-ms = <40>;
-		#reset-cells = <0>;
-	};
-
 	pcie0_refclk: pcie0-refclk {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -36,19 +26,6 @@
 		compatible = "simple-bus";
 		#address-cells = <1>;
 		#size-cells = <0>;
-
-		wl_reg_on: wlreg_on {
-			compatible = "regulator-fixed";
-			pinctrl-names = "default";
-			pinctrl-0 = <&pinctrl_wifi_ctrl>;
-			regulator-name = "WL_REG_ON";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-			off-on-delay = <20000>;
-			startup-delay-us = <100>;
-			enable-active-high;
-		};
 
 		reg_fec_supply: regulator_fecpwr {
 			compatible = "regulator-fixed";
@@ -176,8 +153,7 @@
 	assigned-clocks = <&clk IMX8MM_CLK_UART3>;
 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
 	fsl,uart-has-rtscts;
-	resets = <&bt_reg_on>;
-	status = "okay";
+	status = "disabled";
 };
 
 &uart4 { /* M4 console, UART_B */
@@ -204,23 +180,6 @@
 	dr_mode = "host";
 	picophy,pre-emp-curr-control = <3>;
 	picophy,dc-vol-level-adjust = <7>;
-	status = "okay";
-};
-
-/* WIFI SDIO */
-&usdhc1 {
-	assigned-clocks = <&clk IMX8MM_CLK_USDHC1>;
-	assigned-clock-rates = <133333333>;
-	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-	pinctrl-0 = <&pinctrl_usdhc1>;
-	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-	bus-width = <4>;
-	vmmc-supply = <&wl_reg_on>;
-	pm-ignore-notify;
-	keep-power-in-suspend;
-	non-removable;
-	fsl,sdio-async-interrupt-enabled;
 	status = "okay";
 };
 
@@ -677,18 +636,6 @@
 	pinctrl_wdog: wdoggrp {
 		fsl,pins = <
 			MX8MM_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
-		>;
-	};
-
-	pinctrl_wifi_ctrl: wifi_ctrlgrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_GPIO1_IO00_GPIO1_IO0	0x41 /* WL_REG_ON */
-		>;
-	};
-
-	pinctrl_bt_ctrl: bt_ctrlgrp {
-		fsl,pins = <
-			MX8MM_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41 /* BT_REG_ON */
 		>;
 	};
 

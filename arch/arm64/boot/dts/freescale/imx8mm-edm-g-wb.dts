@@ -14,6 +14,57 @@
 	model = "TechNexion EDM-G-IMX8MM and WB baseboard";
 	compatible = "fsl,imx8mm-edm-g", "fsl,imx8mm";
 
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		m4_reserved: m4@0x80000000 {
+			no-map;
+			reg = <0 0x80000000 0 0x1000000>;
+		};
+
+		vdev0vring0: vdev0vring0@b8000000 {
+			reg = <0 0xb8000000 0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@b8008000 {
+			reg = <0 0xb8008000 0 0x8000>;
+			no-map;
+		};
+
+		rsc_table: rsc_table@b80ff000 {
+			reg = <0 0xb80ff000 0 0x1000>;
+			no-map;
+		};
+
+		vdevbuffer: vdevbuffer@b8400000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0xb8400000 0 0x100000>;
+			no-map;
+		};
+	};
+
+	imx8mm-cm4 {
+		compatible = "fsl,imx8mm-cm4";
+		rsc-da = <0xb8000000>;
+		clocks = <&clk IMX8MM_CLK_M4_DIV>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&mu 0 1
+			  &mu 1 1
+			  &mu 3 1>;
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>, <&m4_reserved>;
+		syscon = <&src>;
+		/*
+		 * The "fsl,startup-delay-ms" is required in case of
+		 * "fsl,auto-boot" is used. It will make sure the
+		 * /lib/firmware is mounted before the imx_rproc driver
+		 * tries to launch the M4 firmware.
+		 */
+		fsl,startup-delay-ms = <500>;
+	};
+
 	regulators {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -80,36 +131,71 @@
 			default-state = "on";
 		};
 	};
-
-	sound_wm8960: sound-wm8960 {
-		compatible = "fsl,imx-audio-wm8960";
-		model = "wm8960-audio";
-		cpu-dai = <&sai2>;
-		codec-master;
-		audio-codec = <&codec_wm8960>;
-		audio-routing =
-			"Headphone Jack", "HP_L",
-			"Headphone Jack", "HP_R",
-			"Ext Spk", "SPK_LP",
-			"Ext Spk", "SPK_LN",
-			"Ext Spk", "SPK_RP",
-			"Ext Spk", "SPK_RN",
-			"LINPUT1", "Main MIC",
-			"RINPUT1", "Main MIC",
-			"Main MIC", "MICB";
-		/* JD2: hp detect high for headphone*/
-		hp-det = <2 0>;
-	};
-
-	clocks {
-		codec_osc: aud_mclk {
-			compatible = "fixed-clock";
-			#clock-cells = <0>;
-			clock-frequency = <24000000>;
-			clock-output-names = "wm8960-mclk";
-		};
-	};
 };
+
+
+/* Start Config. For M4 */
+
+/* 
+ * ATTENTION: M4 may use IPs like below
+ * ECSPI0/ECSPI2, GPIO1/GPIO5, GPT1, I2C3, I2S3, WDOG1, UART4, PWM3, SDMA1
+ */
+
+ &clk {
+	init-on-array = <IMX8MM_CLK_UART4_ROOT
+	IMX8MM_CLK_AHB IMX8MM_CLK_DRAM_CORE
+	IMX8MM_CLK_NOC IMX8MM_CLK_NOC_APB
+	IMX8MM_CLK_USB_BUS
+	IMX8MM_CLK_MAIN_AXI IMX8MM_CLK_AUDIO_AHB
+	IMX8MM_CLK_DRAM_APB IMX8MM_CLK_A53_DIV
+	IMX8MM_ARM_PLL_OUT IMX8MM_CLK_DISP_AXI
+	IMX8MM_CLK_DISP_APB
+	>;
+};
+
+&mu {
+    status = "okay";
+};
+
+
+&i2c3 {
+	status = "disabled";
+};
+
+&uart4 {
+	status = "disabled";
+};
+
+&ecspi2 {
+	status = "disabled";
+};
+
+
+&sdma3 {
+	status = "disabled";
+};
+
+&sai3 {
+	status = "disabled";
+};
+
+&sai1 {
+	status = "disabled";
+};
+
+&sai2 {
+	status = "disabled";
+};
+
+&sai6 {
+	status = "disabled";
+};
+
+&flexspi {
+	status = "disabled";
+};
+
+/* End Config For M4 */
 
 &gpio1 {
 	pinctrl-0 = <&pinctrl_gpio1>;
@@ -246,18 +332,6 @@
 };
 
 &i2c2 {
-	codec_wm8960: wm8960@1a {
-		compatible = "wlf,wm8960";
-		reg = <0x1a>;
-		#sound-dai-cells = <0>;
-		clocks = <&clk IMX8MM_CLK_SAI2>;
-		//clocks = <&codec_osc>; /* Clock is from  external osc on baseboard*/
-		clock-names = "mclk";
-		wlf,shared-lrclk;
-		wlf,fixed-mclk;
-		status = "okay";
-	};
-
 	typec_hd3ss3220: hd3ss3220@67 {
 		compatible = "ti,hd3ss3220";
 		interrupts-extended = <&gpio2 10 IRQ_TYPE_LEVEL_LOW>;
@@ -351,9 +425,6 @@
 	};
 };
 
-&sai2 { /* AUD_A */
-	status = "okay";
-};
 
 &pcie0{
 	pinctrl-names = "default";
@@ -417,3 +488,4 @@
 &pwm4 {
 	status = "okay";
 };
+
