@@ -54,14 +54,8 @@
 		mboxes = <&mu 0 1
 			  &mu 1 1
 			  &mu 3 1>;
-		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>, <&m4_reserved>;
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>;
 		syscon = <&src>;
-		/*
-		 * The "fsl,startup-delay-ms" is required in case of
-		 * "fsl,auto-boot" is used. It will make sure the
-		 * /lib/firmware is mounted before the imx_rproc driver
-		 * tries to launch the M4 firmware.
-		 */
 		fsl,startup-delay-ms = <500>;
 	};
 
@@ -141,7 +135,6 @@
  * ECSPI0/ECSPI2, GPIO1/GPIO5, GPT1, I2C3, I2S3, WDOG1, UART4, PWM3, SDMA1
  */
 
-/*
  &clk {
 	init-on-array = <IMX8MM_CLK_UART4_ROOT
 	IMX8MM_CLK_AHB IMX8MM_CLK_DRAM_CORE
@@ -153,11 +146,12 @@
 	IMX8MM_CLK_DISP_APB
 	>;
 };
-*/
 
+/*
 &mu {
     status = "okay";
 };
+*/
 
 
 &i2c3 {
@@ -168,12 +162,15 @@
 	status = "disabled";
 };
 
-&ecspi2 {
+&sdma3 {
 	status = "disabled";
 };
 
+&micfil {
+	status = "disabled";
+};
 
-&sdma3 {
+&sai6 {
 	status = "disabled";
 };
 
@@ -189,13 +186,14 @@
 	status = "disabled";
 };
 
-&sai6 {
-	status = "disabled";
-};
-
 &flexspi {
 	status = "disabled";
 };
+
+&uart3 {
+	status = "disabled";
+};
+
 
 /* End Config For M4 */
 
