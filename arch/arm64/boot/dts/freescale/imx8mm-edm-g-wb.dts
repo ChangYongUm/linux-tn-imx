@@ -131,35 +131,6 @@
 			default-state = "on";
 		};
 	};
-
-	sound_wm8960: sound-wm8960 {
-		compatible = "fsl,imx-audio-wm8960";
-		model = "wm8960-audio";
-		cpu-dai = <&sai2>;
-		codec-master;
-		audio-codec = <&codec_wm8960>;
-		audio-routing =
-			"Headphone Jack", "HP_L",
-			"Headphone Jack", "HP_R",
-			"Ext Spk", "SPK_LP",
-			"Ext Spk", "SPK_LN",
-			"Ext Spk", "SPK_RP",
-			"Ext Spk", "SPK_RN",
-			"LINPUT1", "Main MIC",
-			"RINPUT1", "Main MIC",
-			"Main MIC", "MICB";
-		/* JD2: hp detect high for headphone*/
-		hp-det = <2 0>;
-	};
-
-	clocks {
-		codec_osc: aud_mclk {
-			compatible = "fixed-clock";
-			#clock-cells = <0>;
-			clock-frequency = <24000000>;
-			clock-output-names = "wm8960-mclk";
-		};
-	};
 };
 
 
@@ -361,18 +332,6 @@
 };
 
 &i2c2 {
-	codec_wm8960: wm8960@1a {
-		compatible = "wlf,wm8960";
-		reg = <0x1a>;
-		#sound-dai-cells = <0>;
-		clocks = <&clk IMX8MM_CLK_SAI2>;
-		//clocks = <&codec_osc>; /* Clock is from  external osc on baseboard*/
-		clock-names = "mclk";
-		wlf,shared-lrclk;
-		wlf,fixed-mclk;
-		status = "okay";
-	};
-
 	typec_hd3ss3220: hd3ss3220@67 {
 		compatible = "ti,hd3ss3220";
 		interrupts-extended = <&gpio2 10 IRQ_TYPE_LEVEL_LOW>;
@@ -466,9 +425,6 @@
 	};
 };
 
-&sai2 { /* AUD_A */
-	status = "okay";
-};
 
 &pcie0{
 	pinctrl-names = "default";
