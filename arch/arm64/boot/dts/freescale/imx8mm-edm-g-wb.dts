@@ -156,10 +156,6 @@
 	status = "disabled";
 };
 
-&uart4 { /* M4 console, UART_B */
-	status = "disabled";
-};
-
 &sdma3 {
 	status = "disabled";
 };

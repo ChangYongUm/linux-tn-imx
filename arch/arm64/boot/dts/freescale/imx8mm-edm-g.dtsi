@@ -156,16 +156,6 @@
 	status = "disabled";
 };
 
-/*
-&uart4 { 
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart4>;
-	assigned-clocks = <&clk IMX8MM_CLK_UART4>;
-	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
-	fsl,uart-has-rtscts;
-	status = "disabled";
-};
-*/
 
 &usbotg1 {
 	dr_mode = "otg";
@@ -348,7 +338,7 @@
 		#gpio-cells = <2>;
 		pinctrl-0 = <&pinctrl_mipi_dsi_en>;
 		enable-gpios = <&gpio3 9 GPIO_ACTIVE_HIGH>;
-		status = "disabled";
+		status = "okay";
 	};
 
 	eeprom_som: eeprom@53 {
@@ -498,17 +488,6 @@
 			MX8MM_IOMUXC_ECSPI1_MISO_UART3_DCE_CTS_B	0x140
 		>;
 	};
-
-	/*
-	pinctrl_uart4: uart4grp {
-		fsl,pins = <
-			MX8MM_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX		0x140
-			MX8MM_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX		0x140
-			MX8MM_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B	0x140
-			MX8MM_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B		0x140
-		>;
-	};
-	*/
 
 	pinctrl_usdhc1: usdhc1grp {
 		fsl,pins = <
