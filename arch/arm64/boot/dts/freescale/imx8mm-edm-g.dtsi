@@ -156,6 +156,7 @@
 	status = "disabled";
 };
 
+/*
 &uart4 { /* M4 console, UART_B */
 	/* used in FreeRTOS, disabled in Linux */
 	pinctrl-names = "default";
@@ -165,6 +166,7 @@
 	fsl,uart-has-rtscts;
 	status = "disabled";
 };
+*/
 
 &usbotg1 {
 	dr_mode = "otg";
@@ -498,6 +500,7 @@
 		>;
 	};
 
+	/*
 	pinctrl_uart4: uart4grp {
 		fsl,pins = <
 			MX8MM_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX		0x140
@@ -506,6 +509,7 @@
 			MX8MM_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B		0x140
 		>;
 	};
+	*/
 
 	pinctrl_usdhc1: usdhc1grp {
 		fsl,pins = <
