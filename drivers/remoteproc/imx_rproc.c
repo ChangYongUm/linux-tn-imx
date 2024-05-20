@@ -966,8 +966,8 @@ static int imx_rproc_xtr_mbox_init(struct rproc *rproc)
 		goto err_out;
 	}
 
-	if (dcfg->method != IMX_SCU_API)
-		return 0;
+	//if (dcfg->method != IMX_SCU_API)
+	//	return 0;
 
 	cl = &priv->cl_rxdb;
 	cl->dev = dev;
