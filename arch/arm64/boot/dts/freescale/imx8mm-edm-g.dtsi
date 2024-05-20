@@ -157,8 +157,7 @@
 };
 
 /*
-&uart4 { /* M4 console, UART_B */
-	/* used in FreeRTOS, disabled in Linux */
+&uart4 { 
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart4>;
 	assigned-clocks = <&clk IMX8MM_CLK_UART4>;
