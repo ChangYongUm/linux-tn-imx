@@ -95,6 +95,9 @@ static int sn65dsi84_write_reg(struct i2c_client *client, u8 addr, const u8 val)
 static int sn65dsi84_probe(struct i2c_client *client,
 			   const struct i2c_device_id *id)
 {
+	printf("sn65dsi84_probe\n");
+
+
 	struct property *prop;
 	int err;
 	int i, size;
