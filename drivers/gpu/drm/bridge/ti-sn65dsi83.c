@@ -668,7 +668,7 @@ static int sn65dsi83_probe(struct i2c_client *client,
 	struct sn65dsi83 *ctx;
 	int ret;
 
-	printf("sn65dsi83_probe\n");
+	dev_info(&client->dev, "sn65dsi83_probe\n");
 
 	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
 	if (!ctx)
