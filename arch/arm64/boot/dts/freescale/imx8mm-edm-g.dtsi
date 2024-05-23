@@ -700,7 +700,7 @@
 };
 
 &lcdif {
-	status = "okay";
+	status = "disabled";
 };
 
 &vpu_g1 {
