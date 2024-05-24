@@ -402,7 +402,7 @@
 };
 
 &lcdif {
-	status = "disabled";
+	status = "okay";
 };
 
 &usbotg1 {
